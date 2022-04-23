@@ -42,6 +42,7 @@ public class Person {
     @NotNull
     private String phone;
     private Date createDate;
-    @OneToOne(mappedBy = "person", fetch = FetchType.LAZY)
+
+    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
     private Client client;
 }

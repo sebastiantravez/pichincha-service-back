@@ -19,9 +19,8 @@ public class Client {
     @Id
     @GeneratedValue
     private UUID clientId;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @MapsId
-    @NotNull
+    @OneToOne
+    @JoinColumn(name = "person_id")
     private Person person;
     @NotNull
     private String password;
