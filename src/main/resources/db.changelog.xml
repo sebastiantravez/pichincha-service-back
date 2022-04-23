@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+
+    <changeSet id="1650738444953-1" author="sebastian.travez">
+        <createTable tableName="persons">
+            <column name="person_id" type="UUID">
+                <constraints primaryKey="true" primaryKeyName="pk_person_id"></constraints>
+            </column>
+            <column name="full_name" type="VARCHAR(200)"></column>
+            <column name="gender_person" type="VARCHAR(50)"></column>
+            <column name="age" type="INTEGER"></column>
+            <column name="dni" type="VARCHAR(20)"></column>
+            <column name="identification_pattern" type="INTEGER"></column>
+            <column name="address" type="VARCHAR(250)"></column>
+            <column name="phone" type="VARCHAR(50)"></column>
+            <column name="create_date" type="timestamp"></column>
+        </createTable>
+        <addUniqueConstraint tableName="persons" columnNames="dni"></addUniqueConstraint>
+    </changeSet>
+    <changeSet id="1650738689971-2" author="sebastian.travez">
+        <createTable tableName="clients">
+            <column name="client_id" type="UUID">
+                <constraints primaryKey="true" primaryKeyName="pk_client_id"></constraints>
+            </column>
+            <column name="person_person_id" type="UUID"></column>
+            <column name="password" type="VARCHAR(100)"></column>
+            <column name="status" type="BOOLEAN"></column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

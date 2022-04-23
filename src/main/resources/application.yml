@@ -1,0 +1,40 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: pichincha-service
+  profiles:
+    include:
+      - info
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pichincha
+    username: postgres
+    password: postgres
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+          batch_size: 128
+          fetch_size: 128
+          order_inserts: true
+          order_updates: true
+          batch_versioned_data: true
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  liquibase:
+    enabled: true
+    change-log: classpath:db.changelog.xml
+    contexts: ${spring.profiles.active}
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
