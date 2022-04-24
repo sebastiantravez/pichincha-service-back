@@ -50,7 +50,7 @@ public class PersonServiceImpl implements PersonService {
             person.setClient(client);
             personRepository.save(person);
         } catch (Exception e) {
-            throw new ValidationException("Error: Ocurrió un problema al registrar el cliente, intente mas tarde");
+            throw new ValidationException(e.getMessage());
         }
     }
 
