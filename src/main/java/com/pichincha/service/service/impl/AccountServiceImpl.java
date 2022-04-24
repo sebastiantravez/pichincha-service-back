@@ -33,7 +33,7 @@ public class AccountServiceImpl implements AccountService {
     public void saveAccount(AccountPresenter accountPresenter) {
         Client client = clientRepository.findById(accountPresenter
                         .getPersonPresenter().getClientPresenter().getClientId())
-                .orElseThrow(() -> new ValidationException("Cliente no existe"));
+                .orElseThrow(() -> new ValidationException("Cliente no existe, no se puede crear cuenta, debe crear el cliente"));
 
         Optional<Account> accountQuery = accountRepository.findByAccountTypeAndClient(accountPresenter.getAccountType(),
                 client);
@@ -56,7 +56,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountPresenter updateAccount(AccountPresenter accountPresenter) {
         Account account = accountRepository.findById(accountPresenter.getAccountId())
-                .orElseThrow(() -> new ValidationException("Cuenta de cliente no existe"));
+                .orElseThrow(() -> new ValidationException("Cuenta de cliente no existe, no se puede actualizar"));
         account.setAccountNumber(accountPresenter.getAccountNumber());
         account.setStatus(accountPresenter.getStatus());
         account.setAccountType(accountPresenter.getAccountType());
@@ -67,7 +67,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deleteAccount(UUID accountId) {
         Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new ValidationException("Cuenta de cliente no existe"));
+                .orElseThrow(() -> new ValidationException("Cuenta de cliente no existe, no se puede eliminar"));
         account.setStatus(Boolean.FALSE);
         accountRepository.save(account);
     }

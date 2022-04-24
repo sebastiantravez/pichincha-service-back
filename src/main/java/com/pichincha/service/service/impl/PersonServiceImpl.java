@@ -2,6 +2,7 @@ package com.pichincha.service.service.impl;
 
 import com.pichincha.service.entity.Client;
 import com.pichincha.service.entity.Person;
+import com.pichincha.service.exception.ValidationException;
 import com.pichincha.service.presentation.presenter.ClientPresenter;
 import com.pichincha.service.presentation.presenter.PersonPresenter;
 import com.pichincha.service.repository.PersonRepository;
@@ -10,7 +11,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ValidationException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +58,7 @@ public class PersonServiceImpl implements PersonService {
     public ClientPresenter updatePerson(PersonPresenter personPresenter) {
         try {
             Person person = personRepository.findByDni(personPresenter.getDni())
-                    .orElseThrow(() -> new ValidationException("Cliente no existe"));
+                    .orElseThrow(() -> new ValidationException("Cliente no existe, no se puede actualizar datos"));
             person.setFullName(personPresenter.getFullName());
             person.setGenderPerson(personPresenter.getGenderPerson());
             person.setAge(personPresenter.getAge());
@@ -71,7 +71,7 @@ public class PersonServiceImpl implements PersonService {
             personRepository.save(person);
             return personPresenter.getClientPresenter();
         } catch (Exception e) {
-            throw new ValidationException("Error: Ocurrió un problema al actualizar el registro del cliente, intente mas tarde");
+            throw new ValidationException(e.getMessage());
         }
     }
 
@@ -87,7 +87,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void deletePerson(UUID personId) {
         Person person = personRepository.findById(personId).orElseThrow(() ->
-                new ValidationException("Cliente no existe"));
+                new ValidationException("Cliente no existe, no se puede eliminar"));
         person.getClient().setStatus(Boolean.FALSE);
         personRepository.save(person);
     }
