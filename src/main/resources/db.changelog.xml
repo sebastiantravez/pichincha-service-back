@@ -69,5 +69,9 @@
                                  constraintName="FK_MOVEMENTS_ON_ACCOUNT" referencedColumnNames="account_id"
                                  referencedTableName="accounts"/>
     </changeSet>
-
+    <changeSet id="1650766840959-5" author="sebastian.travez">
+        <addColumn tableName="accounts">
+            <column name="create_date" type="timestamp"></column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +35,7 @@ public class Account {
     private BigDecimal initialAmount;
     @Builder.Default
     private Boolean status = Boolean.TRUE;
+    private Date createDate;
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;

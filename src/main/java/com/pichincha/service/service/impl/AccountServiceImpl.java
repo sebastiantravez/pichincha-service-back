@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,6 +51,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = modelMapper.map(accountPresenter, Account.class);
         account.setClient(client);
         account.setStatus(accountPresenter.getStatus());
+        account.setCreateDate(new Date());
         accountRepository.save(account);
     }
 
@@ -78,7 +80,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<AccountPresenter> getAllAccounts() {
-        return StreamSupport.stream(accountRepository.findAll().spliterator(), false)
+        return accountRepository.findAllAccounts().stream()
                 .filter(account -> account.getStatus())
                 .map(this::buildAccountPresenter)
                 .collect(Collectors.toList());

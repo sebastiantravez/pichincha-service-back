@@ -2,6 +2,7 @@ package com.pichincha.service.repository;
 
 import com.pichincha.service.entity.Account;
 import com.pichincha.service.entity.Client;
+import com.pichincha.service.entity.Person;
 import com.pichincha.service.enums.AccountType;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -25,4 +26,7 @@ public interface AccountRepository extends CrudRepository<Account, UUID> {
             "WHERE a.accountNumber like CONCAT('%',:searchValue,'%') " +
             "OR LOWER(p.fullName) like LOWER(CONCAT('%',:searchValue,'%')) ")
     List<Account> findByNameIgnoreCase(String searchValue);
+
+    @Query("SELECT a FROM Account a ORDER BY a.createDate DESC")
+    List<Account> findAllAccounts();
 }
