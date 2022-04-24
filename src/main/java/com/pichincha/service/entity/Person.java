@@ -3,10 +3,7 @@ package com.pichincha.service.entity;
 import com.pichincha.service.constraint.ClientValidDni;
 import com.pichincha.service.enums.GenderPerson;
 import com.pichincha.service.enums.IdentificationPattern;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -35,14 +32,13 @@ public class Person {
     @NotNull
     private String dni;
     @NotNull
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private IdentificationPattern identificationPattern;
     @NotNull
     private String address;
     @NotNull
     private String phone;
     private Date createDate;
-
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
     private Client client;
 }

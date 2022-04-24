@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -19,11 +21,15 @@ public class Client {
     @Id
     @GeneratedValue
     private UUID clientId;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "person_id")
     private Person person;
     @NotNull
     private String password;
     @Builder.Default
     private Boolean status = Boolean.TRUE;
+
+    @Builder.Default
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
+    private List<Account> accounts = new ArrayList<>();
 }

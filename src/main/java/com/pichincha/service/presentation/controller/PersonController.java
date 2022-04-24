@@ -19,6 +19,11 @@ public class PersonController {
         personService.savePerson(personPresenter);
     }
 
+    @PutMapping("/updatePerson")
+    public void updatePerson(@RequestBody PersonPresenter personPresenter) {
+        personService.updatePerson(personPresenter);
+    }
+
     @GetMapping("/getAllPersons")
     public List<PersonPresenter> getAllPerson() {
         return personService.getAllPersons();

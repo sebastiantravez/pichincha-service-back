@@ -27,19 +27,15 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void savePerson(PersonPresenter personPresenter) {
-        Person person = personRepository.findByDni(personPresenter.getDni())
-                .orElse(new Person());
-        person.setFullName(personPresenter.getFullName());
-        person.setGenderPerson(personPresenter.getGenderPerson());
-        person.setAge(personPresenter.getAge());
-        person.setDni(personPresenter.getDni());
-        person.setIdentificationPattern(personPresenter.getIdentificationPattern());
-        person.setAddress(personPresenter.getAddress());
-        person.setPhone(personPresenter.getPhone());
-        if (person.getClient() != null) {
-            person.getClient().setStatus(personPresenter.getClientPresenter().getStatus());
-            person.getClient().setPassword(personPresenter.getClientPresenter().getPassword());
-        } else {
+        try {
+            Person person = new Person();
+            person.setFullName(personPresenter.getFullName());
+            person.setGenderPerson(personPresenter.getGenderPerson());
+            person.setAge(personPresenter.getAge());
+            person.setDni(personPresenter.getDni());
+            person.setIdentificationPattern(personPresenter.getIdentificationPattern());
+            person.setAddress(personPresenter.getAddress());
+            person.setPhone(personPresenter.getPhone());
             Client client = Client.builder()
                     .person(person)
                     .password(personPresenter.getClientPresenter().getPassword())
@@ -47,8 +43,31 @@ public class PersonServiceImpl implements PersonService {
                     .build();
             person.setCreateDate(new Date());
             person.setClient(client);
+            personRepository.save(person);
+        } catch (Exception e) {
+            throw new ValidationException("Error: Ocurrió un problema al registrar el cliente, intente mas tarde");
         }
-        personRepository.save(person);
+    }
+
+    @Override
+    public ClientPresenter updatePerson(PersonPresenter personPresenter) {
+        try {
+            Person person = personRepository.findByDni(personPresenter.getDni())
+                    .orElseThrow(() -> new ValidationException("Cliente no existe"));
+            person.setFullName(personPresenter.getFullName());
+            person.setGenderPerson(personPresenter.getGenderPerson());
+            person.setAge(personPresenter.getAge());
+            person.setDni(personPresenter.getDni());
+            person.setIdentificationPattern(personPresenter.getIdentificationPattern());
+            person.setAddress(personPresenter.getAddress());
+            person.setPhone(personPresenter.getPhone());
+            person.getClient().setStatus(personPresenter.getClientPresenter().getStatus());
+            person.getClient().setPassword(personPresenter.getClientPresenter().getPassword());
+            personRepository.save(person);
+            return personPresenter.getClientPresenter();
+        } catch (Exception e) {
+            throw new ValidationException("Error: Ocurrió un problema al actualizar el registro del cliente, intente mas tarde");
+        }
     }
 
     @Override

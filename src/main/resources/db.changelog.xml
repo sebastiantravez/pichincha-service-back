@@ -13,7 +13,7 @@
             <column name="gender_person" type="VARCHAR(50)"></column>
             <column name="age" type="INTEGER"></column>
             <column name="dni" type="VARCHAR(20)"></column>
-            <column name="identification_pattern" type="INTEGER"></column>
+            <column name="identification_pattern" type="VARCHAR(50)"></column>
             <column name="address" type="VARCHAR(250)"></column>
             <column name="phone" type="VARCHAR(50)"></column>
             <column name="create_date" type="timestamp"></column>
@@ -33,4 +33,21 @@
                                  referencedTableName="persons"
                                  referencedColumnNames="person_id"></addForeignKeyConstraint>
     </changeSet>
+    <changeSet id="1650759047974-3" author="sebastian.travez">
+        <createTable tableName="accounts">
+            <column name="bank_account_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_accounts"/>
+            </column>
+            <column name="account_number" type="VARCHAR(100)"/>
+            <column name="account_type" type="VARCHAR(20)"/>
+            <column name="initial_amount" type="numeric(16, 6)" defaultValueComputed="0.00"/>
+            <column name="status" type="BOOLEAN"/>
+            <column name="client_id" type="UUID"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="accounts"
+                                 constraintName="FK_ACCOUNTS_ON_CLIENT" referencedColumnNames="client_id"
+                                 referencedTableName="clients"/>
+        <addUniqueConstraint tableName="accounts" columnNames="account_number"></addUniqueConstraint>
+    </changeSet>
+
 </databaseChangeLog>
