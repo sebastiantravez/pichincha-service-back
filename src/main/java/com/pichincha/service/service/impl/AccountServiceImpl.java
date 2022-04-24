@@ -63,6 +63,7 @@ public class AccountServiceImpl implements AccountService {
             account.setAccountNumber(accountPresenter.getAccountNumber());
             account.setStatus(accountPresenter.getStatus());
             account.setAccountType(accountPresenter.getAccountType());
+            account.setCreateDate(new Date());
             accountRepository.save(account);
             return accountPresenter;
         } catch (Exception e) {
