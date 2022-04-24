@@ -28,7 +28,6 @@ public class Client {
     private String password;
     @Builder.Default
     private Boolean status = Boolean.TRUE;
-
     @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "client")
     private List<Account> accounts = new ArrayList<>();

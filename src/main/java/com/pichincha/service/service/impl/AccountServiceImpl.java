@@ -2,6 +2,7 @@ package com.pichincha.service.service.impl;
 
 import com.pichincha.service.entity.Account;
 import com.pichincha.service.entity.Client;
+import com.pichincha.service.exception.ValidationException;
 import com.pichincha.service.presentation.presenter.AccountPresenter;
 import com.pichincha.service.presentation.presenter.ClientPresenter;
 import com.pichincha.service.presentation.presenter.PersonPresenter;
@@ -12,8 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ValidationException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -30,17 +31,26 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void saveAccount(AccountPresenter accountPresenter) {
-        try {
-            Client client = clientRepository.findById(accountPresenter
-                            .getPersonPresenter().getClientPresenter().getClientId())
-                    .orElseThrow(() -> new ValidationException("Cliente no existe"));
-            Account account = modelMapper.map(accountPresenter, Account.class);
-            account.setClient(client);
-            account.setStatus(Boolean.TRUE);
-            accountRepository.save(account);
-        } catch (Exception e) {
-            throw new ValidationException("Error: Ocurrió un problema al registrar la cuenta del cliente. intente mas tarde");
+        Client client = clientRepository.findById(accountPresenter
+                        .getPersonPresenter().getClientPresenter().getClientId())
+                .orElseThrow(() -> new ValidationException("Cliente no existe"));
+
+        Optional<Account> accountQuery = accountRepository.findByAccountTypeAndClient(accountPresenter.getAccountType(),
+                client);
+
+        if (accountQuery.isPresent()) {
+            throw new ValidationException("Error: Cliente ya se encuentra registrado con el numero de cuenta : " + accountPresenter.getAccountNumber());
         }
+
+        Optional<Account> accountQuery2 = accountRepository.findByAccountNumber(accountPresenter.getAccountNumber());
+        if (accountQuery2.isPresent()) {
+            throw new ValidationException("Error: Numero de cuenta ya existe");
+        }
+
+        Account account = modelMapper.map(accountPresenter, Account.class);
+        account.setClient(client);
+        account.setStatus(accountPresenter.getStatus());
+        accountRepository.save(account);
     }
 
     @Override

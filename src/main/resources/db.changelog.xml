@@ -35,7 +35,7 @@
     </changeSet>
     <changeSet id="1650759047974-3" author="sebastian.travez">
         <createTable tableName="accounts">
-            <column name="bank_account_id" type="UUID">
+            <column name="account_id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_accounts"/>
             </column>
             <column name="account_number" type="VARCHAR(100)"/>
@@ -48,6 +48,23 @@
                                  constraintName="FK_ACCOUNTS_ON_CLIENT" referencedColumnNames="client_id"
                                  referencedTableName="clients"/>
         <addUniqueConstraint tableName="accounts" columnNames="account_number"></addUniqueConstraint>
+    </changeSet>
+    <changeSet id="1650759047974-4" author="sebastian.travez">
+        <addUniqueConstraint tableName="accounts" columnNames="account_type, client_id"></addUniqueConstraint>
+    </changeSet>
+    <changeSet id="1650766840959-5" author="sebastian.travez">
+        <createTable tableName="movements">
+            <column name="movement_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_movements"/>
+            </column>
+            <column name="movement_date" type="DATETIME"/>
+            <column name="movement_type" type="INT"/>
+            <column name="observation" type="VARCHAR(255)"/>
+            <column name="amount" type="DECIMAL"/>
+            <column name="balance_available" type="DECIMAL"/>
+            <column name="account_id" type="UUID"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="movements" constraintName="FK_MOVEMENTS_ON_ACCOUNT" referencedColumnNames="account_id" referencedTableName="accounts"/>
     </changeSet>
 
 </databaseChangeLog>

@@ -10,6 +10,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -21,7 +23,7 @@ import java.util.UUID;
 public class Account {
     @Id
     @GeneratedValue
-    private UUID bankAccountId;
+    private UUID accountId;
     @NotNull
     @Column(unique = true)
     private String accountNumber;
@@ -31,8 +33,10 @@ public class Account {
     @PositiveOrZero
     private BigDecimal initialAmount;
     @Builder.Default
-    private Boolean status = Boolean.FALSE;
+    private Boolean status = Boolean.TRUE;
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
+    private List<Movements> movements = new ArrayList<>();
 }

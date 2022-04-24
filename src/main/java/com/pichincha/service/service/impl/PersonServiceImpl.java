@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.ValidationException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -28,6 +29,10 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void savePerson(PersonPresenter personPresenter) {
         try {
+            Optional<Person> personQuery = personRepository.findByDni(personPresenter.getDni());
+            if (personQuery.isPresent()) {
+                throw new ValidationException("Cliente ya existe");
+            }
             Person person = new Person();
             person.setFullName(personPresenter.getFullName());
             person.setGenderPerson(personPresenter.getGenderPerson());

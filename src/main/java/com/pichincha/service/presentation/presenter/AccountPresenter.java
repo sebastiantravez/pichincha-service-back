@@ -22,6 +22,7 @@ public class AccountPresenter {
     private AccountType accountType;
     @NotNull
     private BigDecimal initialAmount;
+    @Builder.Default
     private Boolean status = Boolean.FALSE;
     private PersonPresenter personPresenter;
 }
