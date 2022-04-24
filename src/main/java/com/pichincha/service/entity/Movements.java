@@ -1,6 +1,7 @@
 package com.pichincha.service.entity;
 
 import com.pichincha.service.enums.MovementType;
+import com.pichincha.service.enums.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,10 +25,13 @@ public class Movements {
     private UUID movementId;
     private Date movementDate;
     @NotNull
+    @Enumerated(EnumType.STRING)
     private MovementType movementType;
     private String observation;
-    private BigDecimal amount;
+    private BigDecimal movementAmount;
     private BigDecimal balanceAvailable;
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;

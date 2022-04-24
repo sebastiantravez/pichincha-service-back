@@ -57,14 +57,16 @@
             <column name="movement_id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_movements"/>
             </column>
-            <column name="movement_date" type="DATETIME"/>
-            <column name="movement_type" type="INT"/>
+            <column name="movement_date" type="timestamp"/>
+            <column name="movement_type" type="VARCHAR(20)"/>
             <column name="observation" type="VARCHAR(255)"/>
-            <column name="amount" type="DECIMAL"/>
-            <column name="balance_available" type="DECIMAL"/>
+            <column name="movement_amount" type="numeric(16, 6)"/>
+            <column name="balance_available" type="numeric(16, 6)"/>
             <column name="account_id" type="UUID"/>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="movements" constraintName="FK_MOVEMENTS_ON_ACCOUNT" referencedColumnNames="account_id" referencedTableName="accounts"/>
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="movements"
+                                 constraintName="FK_MOVEMENTS_ON_ACCOUNT" referencedColumnNames="account_id"
+                                 referencedTableName="accounts"/>
     </changeSet>
 
 </databaseChangeLog>

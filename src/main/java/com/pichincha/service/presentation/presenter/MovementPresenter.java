@@ -21,7 +21,7 @@ public class MovementPresenter {
     @NotNull
     private MovementType movementType;
     private String observation;
-    private BigDecimal amount;
+    private BigDecimal movementAmount;
     private BigDecimal balanceAvailable;
     private AccountPresenter accountPresenter;
 }

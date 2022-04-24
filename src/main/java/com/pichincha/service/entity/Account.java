@@ -37,6 +37,7 @@ public class Account {
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
+    @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
     private List<Movements> movements = new ArrayList<>();
 }
