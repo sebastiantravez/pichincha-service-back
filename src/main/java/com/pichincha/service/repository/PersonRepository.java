@@ -27,4 +27,7 @@ public interface PersonRepository extends CrudRepository<Person, UUID> {
             "WHERE dni like CONCAT('%',:searchValue,'%') " +
             "OR LOWER(fullName) like LOWER(CONCAT('%',:searchValue,'%')) ")
     List<Person> findByNameIgnoreCase(String searchValue);
+
+    @Query("SELECT p FROM Person p ORDER BY p.createDate DESC")
+    List<Person> findAllPersons();
 }

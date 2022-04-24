@@ -1,6 +1,7 @@
 package com.pichincha.service.presentation.controller;
 
 import com.pichincha.service.presentation.presenter.AccountPresenter;
+import com.pichincha.service.presentation.presenter.PersonPresenter;
 import com.pichincha.service.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin
 public class AccountController {
 
     @Autowired
@@ -34,4 +36,8 @@ public class AccountController {
         accountService.deleteAccount(accountId);
     }
 
+    @GetMapping("/searchAccount/{value}")
+    public List<AccountPresenter> searchAccount(@PathVariable("value") String value) {
+        return accountService.searchAccount(value);
+    }
 }

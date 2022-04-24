@@ -55,13 +55,17 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountPresenter updateAccount(AccountPresenter accountPresenter) {
-        Account account = accountRepository.findById(accountPresenter.getAccountId())
-                .orElseThrow(() -> new ValidationException("Cuenta de cliente no existe, no se puede actualizar"));
-        account.setAccountNumber(accountPresenter.getAccountNumber());
-        account.setStatus(accountPresenter.getStatus());
-        account.setAccountType(accountPresenter.getAccountType());
-        accountRepository.save(account);
-        return accountPresenter;
+        try {
+            Account account = accountRepository.findById(accountPresenter.getAccountId())
+                    .orElseThrow(() -> new ValidationException("Cuenta de cliente no existe, no se puede actualizar"));
+            account.setAccountNumber(accountPresenter.getAccountNumber());
+            account.setStatus(accountPresenter.getStatus());
+            account.setAccountType(accountPresenter.getAccountType());
+            accountRepository.save(account);
+            return accountPresenter;
+        } catch (Exception e) {
+            throw new ValidationException(e.getMessage());
+        }
     }
 
     @Override
@@ -75,6 +79,15 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<AccountPresenter> getAllAccounts() {
         return StreamSupport.stream(accountRepository.findAll().spliterator(), false)
+                .filter(account -> account.getStatus())
+                .map(this::buildAccountPresenter)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AccountPresenter> searchAccount(String searchValue) {
+        searchValue = searchValue.replace(' ', '%');
+        return accountRepository.findByNameIgnoreCase(searchValue).stream()
                 .filter(account -> account.getStatus())
                 .map(this::buildAccountPresenter)
                 .collect(Collectors.toList());

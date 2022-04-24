@@ -15,5 +15,5 @@ public interface PersonService {
 
     void deletePerson(UUID personId);
 
-    List<PersonPresenter> searchPerson(String value);
+    List<PersonPresenter> searchPerson(String searchValue);
 }

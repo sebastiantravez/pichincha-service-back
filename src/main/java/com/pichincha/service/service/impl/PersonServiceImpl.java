@@ -68,6 +68,7 @@ public class PersonServiceImpl implements PersonService {
             person.setPhone(personPresenter.getPhone());
             person.getClient().setStatus(personPresenter.getClientPresenter().getStatus());
             person.getClient().setPassword(personPresenter.getClientPresenter().getPassword());
+            person.setCreateDate(new Date());
             personRepository.save(person);
             return personPresenter.getClientPresenter();
         } catch (Exception e) {
@@ -77,7 +78,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<PersonPresenter> getAllPersons() {
-        List<PersonPresenter> personPresenters = StreamSupport.stream(personRepository.findAll().spliterator(), false)
+        List<PersonPresenter> personPresenters = personRepository.findAllPersons().stream()
                 .filter(person -> person.getClient().getStatus())
                 .map(this::buildClientePresenter)
                 .collect(Collectors.toList());
