@@ -27,7 +27,7 @@
             </column>
             <column name="person_id" type="UUID"></column>
             <column name="password" type="VARCHAR(100)"></column>
-            <column name="status" type="BOOLEAN"></column>
+            <column name="status" type="BOOLEAN" defaultValueBoolean="true"></column>
         </createTable>
         <addForeignKeyConstraint baseTableName="clients" baseColumnNames="person_id" constraintName="fk_person_id"
                                  referencedTableName="persons"
@@ -41,7 +41,7 @@
             <column name="account_number" type="VARCHAR(100)"/>
             <column name="account_type" type="VARCHAR(20)"/>
             <column name="initial_amount" type="numeric(16, 6)" defaultValueComputed="0.00"/>
-            <column name="status" type="BOOLEAN"/>
+            <column name="status" type="BOOLEAN" defaultValueBoolean="true"/>
             <column name="client_id" type="UUID"/>
         </createTable>
         <addForeignKeyConstraint baseColumnNames="client_id" baseTableName="accounts"
@@ -59,6 +59,7 @@
             </column>
             <column name="movement_date" type="timestamp"/>
             <column name="movement_type" type="VARCHAR(20)"/>
+            <column name="transaction_type" type="varchar(20)"/>
             <column name="observation" type="VARCHAR(255)"/>
             <column name="movement_amount" type="numeric(16, 6)"/>
             <column name="balance_available" type="numeric(16, 6)"/>

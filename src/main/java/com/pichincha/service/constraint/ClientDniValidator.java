@@ -11,7 +11,7 @@ public class ClientDniValidator implements ConstraintValidator<ClientValidDni, P
 
     @Override
     public boolean isValid(Person value, ConstraintValidatorContext context) {
-        if (value.getIdentificationPattern().equals(IdentificationPattern.IDENTIFICATION_CARD)) {
+        if (value.getIdentificationPattern().equals(IdentificationPattern.CEDULA)) {
             return IdentityValidation.dniIdentificationCardValidation(value.getDni());
         } else if (value.getIdentificationPattern().equals(IdentificationPattern.RUC)) {
             return IdentityValidation.rucCardValidation(value.getDni());

@@ -13,7 +13,7 @@ public class TestData {
                 .genderPerson(GenderPerson.MASCULINO)
                 .age(20)
                 .dni("1724022437")
-                .identificationPattern(IdentificationPattern.IDENTIFICATION_CARD)
+                .identificationPattern(IdentificationPattern.CEDULA)
                 .build();
     }
 

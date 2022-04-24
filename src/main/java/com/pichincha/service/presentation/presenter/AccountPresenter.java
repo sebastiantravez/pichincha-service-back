@@ -23,6 +23,6 @@ public class AccountPresenter {
     @NotNull
     private BigDecimal initialAmount;
     @Builder.Default
-    private Boolean status = Boolean.FALSE;
+    private Boolean status = Boolean.TRUE;
     private PersonPresenter personPresenter;
 }

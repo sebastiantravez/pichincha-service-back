@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum IdentificationPattern {
-    IDENTIFICATION_CARD,
+    CEDULA,
     RUC,
-    PASSPORT
+    PASAPORTE
 }

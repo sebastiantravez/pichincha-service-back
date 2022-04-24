@@ -14,4 +14,6 @@ public interface PersonService {
     List<PersonPresenter> getAllPersons();
 
     void deletePerson(UUID personId);
+
+    List<PersonPresenter> searchPerson(String value);
 }

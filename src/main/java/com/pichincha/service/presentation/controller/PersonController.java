@@ -5,10 +5,12 @@ import com.pichincha.service.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin
 public class PersonController {
 
     @Autowired
@@ -34,4 +36,8 @@ public class PersonController {
         personService.deletePerson(personId);
     }
 
+    @GetMapping("/searchPerson/{value}")
+    public List<PersonPresenter> searchPerson(@PathVariable("value") String value) {
+        return personService.searchPerson(value);
+    }
 }

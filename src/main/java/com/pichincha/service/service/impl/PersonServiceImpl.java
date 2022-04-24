@@ -92,6 +92,15 @@ public class PersonServiceImpl implements PersonService {
         personRepository.save(person);
     }
 
+    @Override
+    public List<PersonPresenter> searchPerson(String searchValue) {
+        searchValue = searchValue.replace(' ', '%');
+        return personRepository.findByNameIgnoreCase(searchValue).stream()
+                .filter(person -> person.getClient().getStatus())
+                .map(this::buildClientePresenter)
+                .collect(Collectors.toList());
+    }
+
     private PersonPresenter buildClientePresenter(Person person) {
         PersonPresenter personPresenter = modelMapper.map(person, PersonPresenter.class);
         ClientPresenter clientPresenter = modelMapper.map(person.getClient(), ClientPresenter.class);

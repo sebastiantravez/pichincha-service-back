@@ -14,5 +14,6 @@ import java.util.UUID;
 public class ClientPresenter {
     private UUID clientId;
     private String password;
-    private Boolean status;
+    @Builder.Default
+    private Boolean status = Boolean.TRUE;
 }

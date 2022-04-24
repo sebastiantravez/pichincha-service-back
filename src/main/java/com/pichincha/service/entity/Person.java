@@ -39,6 +39,6 @@ public class Person {
     @NotNull
     private String phone;
     private Date createDate;
-    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "person", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Client client;
 }
