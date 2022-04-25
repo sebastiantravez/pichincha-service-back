@@ -9,7 +9,7 @@ spring:
     include:
       - info
   datasource:
-    url: jdbc:postgresql://localhost:5432/pichincha
+    url: jdbc:postgresql://172.15.1.85:5432/pichincha
     username: postgres
     password: postgres
   jpa:
