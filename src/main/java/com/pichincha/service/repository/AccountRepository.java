@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,4 +32,15 @@ public interface AccountRepository extends CrudRepository<Account, UUID> {
     List<Account> findAllAccounts();
 
     List<Account> findByClient(Client client);
+
+    @Query("SELECT a " +
+            "FROM Account a " +
+            "JOIN a.client c " +
+            "JOIN c.person p " +
+            "JOIN a.movements m " +
+            "WHERE c.clientId = :clientId " +
+            "AND m.movementDate between :initDate and :endDate " +
+            "AND a.accountType = :accountType " +
+            "ORDER BY m.movementDate DESC")
+    Optional<Account> findAccountsMovements(UUID clientId, AccountType accountType, Date initDate, Date endDate);
 }

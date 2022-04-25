@@ -15,4 +15,5 @@ public interface MovementService {
     void deleteMovement(UUID movementId);
 
     List<MovementPresenter> searchMovement(String searchValue);
+
 }

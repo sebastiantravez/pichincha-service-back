@@ -25,4 +25,5 @@ public class AccountPresenter {
     @Builder.Default
     private Boolean status = Boolean.TRUE;
     private PersonPresenter personPresenter;
+    private byte[] pdf;
 }
