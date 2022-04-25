@@ -28,7 +28,7 @@ public class AccountController {
     }
 
     @PutMapping("/updateAccount")
-    public void updatePerson(@RequestBody AccountPresenter accountPresenter) {
+    public void updateAccount(@RequestBody AccountPresenter accountPresenter) {
         accountService.updateAccount(accountPresenter);
     }
 

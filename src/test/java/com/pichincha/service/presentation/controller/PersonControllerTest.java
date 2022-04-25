@@ -32,14 +32,14 @@ public class PersonControllerTest {
     }
 
     @Test
-    public void savePerson() {
+    public void shouldSavePerson() {
         doNothing().when(personService).savePerson(any());
         personController.savePerson(testData.personPresenter(testData.person()));
         verify(personService).savePerson(any());
     }
 
     @Test
-    public void getAllPerson() {
+    public void shouldGetAllPerson() {
         List<PersonPresenter> personPresenters = List.of(testData.personPresenter(testData.person()));
         when(personService.getAllPersons()).thenReturn(personPresenters);
         List<PersonPresenter> personPresenterList = personController.getAllPerson();
@@ -48,7 +48,7 @@ public class PersonControllerTest {
     }
 
     @Test
-    public void deletePerson() {
+    public void shouldDeletePerson() {
         doNothing().when(personService).deletePerson(any());
         personController.deletePerson(UUID.randomUUID());
         verify(personService).deletePerson(any());

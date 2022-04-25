@@ -1,6 +1,5 @@
 package com.pichincha.service.presentation.controller;
 
-import com.pichincha.service.presentation.presenter.AccountPresenter;
 import com.pichincha.service.presentation.presenter.MovementPresenter;
 import com.pichincha.service.service.MovementService;
 import org.springframework.beans.factory.annotation.Autowired;
