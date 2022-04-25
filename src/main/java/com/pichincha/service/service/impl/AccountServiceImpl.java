@@ -13,6 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +62,11 @@ public class AccountServiceImpl implements AccountService {
         try {
             Account account = accountRepository.findById(accountPresenter.getAccountId())
                     .orElseThrow(() -> new ValidationException("Cuenta de cliente no existe, no se puede actualizar"));
+            BigDecimal initialAmount = account.getInitialAmount().setScale(2, RoundingMode.HALF_UP);
+            BigDecimal modifyInitialAmount = accountPresenter.getInitialAmount().setScale(2, RoundingMode.HALF_UP);
+            if (!initialAmount.equals(modifyInitialAmount) && account.getMovements().size() > 0) {
+                throw new ValidationException("Error: No se puede modificar el saldo inicial, el cliente tiene movimientos");
+            }
             account.setAccountNumber(accountPresenter.getAccountNumber());
             account.setStatus(accountPresenter.getStatus());
             account.setAccountType(accountPresenter.getAccountType());
@@ -68,7 +75,7 @@ public class AccountServiceImpl implements AccountService {
             accountRepository.save(account);
             return accountPresenter;
         } catch (Exception e) {
-            throw new ValidationException(e.getMessage());
+            throw new ValidationException(e.getCause().getCause().getCause().getMessage());
         }
     }
 

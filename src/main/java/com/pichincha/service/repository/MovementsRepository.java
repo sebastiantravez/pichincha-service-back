@@ -20,4 +20,14 @@ public interface MovementsRepository extends CrudRepository<Movements, UUID> {
 
     @Query("SELECT m FROM Movements m ORDER BY m.movementDate DESC")
     List<Movements> finAllMovements();
+
+    @Query("SELECT m " +
+            "FROM Movements m " +
+            "JOIN m.account a " +
+            "JOIN a.client c " +
+            "JOIN c.person p " +
+            "WHERE a.accountNumber like CONCAT('%',:searchValue,'%') " +
+            "OR LOWER(p.fullName) like LOWER(CONCAT('%',:searchValue,'%')) " +
+            "ORDER BY m.movementDate DESC")
+    List<Movements> findByNameIgnoreCase(String searchValue);
 }

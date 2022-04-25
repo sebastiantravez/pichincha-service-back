@@ -133,6 +133,7 @@ public class MovementServiceImpl implements MovementService {
     @Override
     public List<MovementPresenter> getAllMovements() {
         return movementsRepository.finAllMovements().stream()
+                .filter(movements -> movements.getTransactionType().equals(TransactionType.APROBADA))
                 .map(this::buildMovementPresenter)
                 .collect(Collectors.toList());
     }
@@ -177,6 +178,15 @@ public class MovementServiceImpl implements MovementService {
         movementCanceled.setTransactionType(TransactionType.CANCELADA);
         movementCanceled.setMovementDate(new Date());
         movementsRepository.save(movementCanceled);
+    }
+
+    @Override
+    public List<MovementPresenter> searchMovement(String searchValue) {
+        searchValue = searchValue.replace(' ', '%');
+        return movementsRepository.findByNameIgnoreCase(searchValue).stream()
+                .filter(movements -> movements.getTransactionType().equals(TransactionType.APROBADA))
+                .map(this::buildMovementPresenter)
+                .collect(Collectors.toList());
     }
 
     public MovementPresenter buildMovementPresenter(Movements movements) {
