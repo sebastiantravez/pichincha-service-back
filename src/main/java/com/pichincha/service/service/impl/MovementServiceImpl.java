@@ -41,7 +41,7 @@ public class MovementServiceImpl implements MovementService {
                 throw new ValidationException("Error: El valor del movimiento debe ser superior a 0");
             }
 
-            Account account = accountRepository.findByAccountNumber(movementPresenter.getAccountPresenter().getAccountNumber())
+            Account account = accountRepository.findById(movementPresenter.getAccountPresenter().getAccountId())
                     .orElseThrow(() -> new ValidationException("Error: Cuenta de cliente no existe"));
 
             Movements movements = new Movements();
@@ -67,32 +67,33 @@ public class MovementServiceImpl implements MovementService {
                         movements.setBalanceAvailable(amountAvailableCredit);
                         break;
                 }
+            } else {
+
+                Movements movementsQuery = movementsRepository.findLastMove(movementPresenter.getAccountPresenter().getAccountId(),
+                                TransactionType.APROBADA.name())
+                        .orElseThrow(() -> new ValidationException("Error: Cuenta sin movimientos"));
+
+                switch (movementPresenter.getMovementType()) {
+                    case DEBITO:
+                        if (movementsQuery.getBalanceAvailable().compareTo(BigDecimal.ZERO) <= 0) {
+                            throw new ValidationException("Error: Saldo no disponible");
+                        }
+                        if (movementPresenter.getMovementAmount().compareTo(movementsQuery.getBalanceAvailable()) > 0) {
+                            throw new ValidationException("Error: El valor del retiro debe ser menor o igual al saldo disponible del cliente");
+                        }
+                        BigDecimal amountAvailableDebit = movementsQuery.getBalanceAvailable().subtract(movementPresenter.getMovementAmount())
+                                .setScale(2, RoundingMode.HALF_UP);
+                        movements.setMovementAmount(movementPresenter.getMovementAmount());
+                        movements.setBalanceAvailable(amountAvailableDebit);
+                        break;
+                    case CREDITO:
+                        BigDecimal amountAvailableCredit = movementsQuery.getBalanceAvailable().add(movementPresenter.getMovementAmount())
+                                .setScale(2, RoundingMode.HALF_UP);
+                        movements.setMovementAmount(movementPresenter.getMovementAmount());
+                        movements.setBalanceAvailable(amountAvailableCredit);
+                        break;
+                }
             }
-
-            Movements movementsQuery = movementsRepository.findLastMove(account.getAccountId(), TransactionType.APROBADA)
-                    .orElseThrow(() -> new ValidationException("Error: Cuenta sin movimientos"));
-
-            switch (movementPresenter.getMovementType()) {
-                case DEBITO:
-                    if (movementsQuery.getBalanceAvailable().compareTo(BigDecimal.ZERO) <= 0) {
-                        throw new ValidationException("Error: Saldo no disponible");
-                    }
-                    if (movementPresenter.getMovementAmount().compareTo(movementsQuery.getBalanceAvailable()) > 0) {
-                        throw new ValidationException("Error: El valor del retiro debe ser menor o igual al saldo disponible del cliente");
-                    }
-                    BigDecimal amountAvailableDebit = movementsQuery.getBalanceAvailable().subtract(movementPresenter.getMovementAmount())
-                            .setScale(2, RoundingMode.HALF_UP);
-                    movements.setMovementAmount(movementPresenter.getMovementAmount());
-                    movements.setBalanceAvailable(amountAvailableDebit);
-                    break;
-                case CREDITO:
-                    BigDecimal amountAvailableCredit = movementsQuery.getBalanceAvailable().add(movementPresenter.getMovementAmount())
-                            .setScale(2, RoundingMode.HALF_UP);
-                    movements.setMovementAmount(movementPresenter.getMovementAmount());
-                    movements.setBalanceAvailable(amountAvailableCredit);
-                    break;
-            }
-
             movements.setAccount(account);
             movements.setMovementType(movementPresenter.getMovementType());
             movements.setMovementDate(new Date());
@@ -132,7 +133,6 @@ public class MovementServiceImpl implements MovementService {
     @Override
     public List<MovementPresenter> getAllMovements() {
         return movementsRepository.finAllMovements().stream()
-                .filter(movements -> movements.getTransactionType().equals(TransactionType.APROBADA))
                 .map(this::buildMovementPresenter)
                 .collect(Collectors.toList());
     }
@@ -142,7 +142,7 @@ public class MovementServiceImpl implements MovementService {
         Movements movementCanceled = movementsRepository.findById(movementId)
                 .orElseThrow(() -> new ValidationException("No existe movimiento"));
 
-        Movements movementsApproved = movementsRepository.findLastMove(movementCanceled.getAccount().getAccountId(), TransactionType.APROBADA)
+        Movements movementsApproved = movementsRepository.findLastMove(movementCanceled.getAccount().getAccountId(), TransactionType.APROBADA.name())
                 .orElseThrow(() -> new ValidationException("Error: Cuenta sin movimientos"));
 
         Movements newMovement = new Movements();
@@ -156,6 +156,7 @@ public class MovementServiceImpl implements MovementService {
                 newMovement.setTransactionType(TransactionType.APROBADA);
                 newMovement.setMovementType(MovementType.CREDITO);
                 newMovement.setObservation("SE ACREDITA VALOR POR CANCELACION DE TRANSACCION");
+                newMovement.setAccount(movementsApproved.getAccount());
                 newMovement.setMovementDate(new Date());
                 break;
             case CREDITO:
@@ -164,9 +165,10 @@ public class MovementServiceImpl implements MovementService {
                 newMovement.setMovementAmount(movementCanceled.getMovementAmount());
                 newMovement.setBalanceAvailable(amountDebit);
                 newMovement.setTransactionType(TransactionType.APROBADA);
-                newMovement.setMovementType(MovementType.CREDITO);
+                newMovement.setMovementType(MovementType.DEBITO);
                 newMovement.setObservation("SE DEBITA VALOR POR CANCELACION DE TRANSACCION");
                 newMovement.setMovementDate(new Date());
+                newMovement.setAccount(movementsApproved.getAccount());
                 break;
         }
 

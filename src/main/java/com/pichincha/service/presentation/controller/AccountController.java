@@ -1,6 +1,7 @@
 package com.pichincha.service.presentation.controller;
 
 import com.pichincha.service.presentation.presenter.AccountPresenter;
+import com.pichincha.service.presentation.presenter.MovementPresenter;
 import com.pichincha.service.presentation.presenter.PersonPresenter;
 import com.pichincha.service.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,10 @@ public class AccountController {
     @GetMapping("/searchAccount/{value}")
     public List<AccountPresenter> searchAccount(@PathVariable("value") String value) {
         return accountService.searchAccount(value);
+    }
+
+    @GetMapping("/getAccountsByClient")
+    public List<AccountPresenter> getAccountsByClient(@RequestParam UUID clientId) {
+        return accountService.getAccountsByClient(clientId);
     }
 }

@@ -1,6 +1,7 @@
 package com.pichincha.service.presentation.presenter;
 
 import com.pichincha.service.enums.MovementType;
+import com.pichincha.service.enums.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,5 +24,6 @@ public class MovementPresenter {
     private String observation;
     private BigDecimal movementAmount;
     private BigDecimal balanceAvailable;
+    private TransactionType transactionType;
     private AccountPresenter accountPresenter;
 }

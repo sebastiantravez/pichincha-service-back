@@ -16,4 +16,6 @@ public interface AccountService {
     List<AccountPresenter> getAllAccounts();
 
     List<AccountPresenter> searchAccount(String searchValue);
+
+    List<AccountPresenter> getAccountsByClient(UUID clientId);
 }

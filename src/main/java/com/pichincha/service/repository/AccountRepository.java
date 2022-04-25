@@ -29,4 +29,6 @@ public interface AccountRepository extends CrudRepository<Account, UUID> {
 
     @Query("SELECT a FROM Account a ORDER BY a.createDate DESC")
     List<Account> findAllAccounts();
+
+    List<Account> findByClient(Client client);
 }

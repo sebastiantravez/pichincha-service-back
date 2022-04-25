@@ -16,7 +16,7 @@ public interface MovementsRepository extends CrudRepository<Movements, UUID> {
             "WHERE m.account_id = :accountId " +
             "AND m.transaction_type = :transactionType " +
             "ORDER BY m.movement_date DESC LIMIT 1", nativeQuery = true)
-    Optional<Movements> findLastMove(UUID accountId, TransactionType transactionType);
+    Optional<Movements> findLastMove(UUID accountId, String transactionType);
 
     @Query("SELECT m FROM Movements m ORDER BY m.movementDate DESC")
     List<Movements> finAllMovements();

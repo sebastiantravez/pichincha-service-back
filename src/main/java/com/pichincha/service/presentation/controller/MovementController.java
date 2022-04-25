@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin
 public class MovementController {
 
     @Autowired
@@ -33,4 +34,5 @@ public class MovementController {
     public void deleteMovement(@RequestParam UUID movementId) {
         movementService.deleteMovement(movementId);
     }
+
 }

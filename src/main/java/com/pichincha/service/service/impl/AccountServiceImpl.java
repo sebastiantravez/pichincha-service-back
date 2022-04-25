@@ -40,7 +40,7 @@ public class AccountServiceImpl implements AccountService {
                 client);
 
         if (accountQuery.isPresent()) {
-            throw new ValidationException("Error: Cliente ya se encuentra registrado con el numero de cuenta : " + accountPresenter.getAccountNumber());
+            throw new ValidationException("Error: Cliente ya tiene un registro de cuentas con el banco");
         }
 
         Optional<Account> accountQuery2 = accountRepository.findByAccountNumber(accountPresenter.getAccountNumber());
@@ -64,6 +64,7 @@ public class AccountServiceImpl implements AccountService {
             account.setStatus(accountPresenter.getStatus());
             account.setAccountType(accountPresenter.getAccountType());
             account.setCreateDate(new Date());
+            account.setInitialAmount(accountPresenter.getInitialAmount());
             accountRepository.save(account);
             return accountPresenter;
         } catch (Exception e) {
@@ -96,6 +97,16 @@ public class AccountServiceImpl implements AccountService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<AccountPresenter> getAccountsByClient(UUID clientId) {
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ValidationException("Error: Cliente no existe"));
+        return accountRepository.findByClient(client)
+                .stream().filter(account -> account.getStatus())
+                .map(this::buildAccountPresenter)
+                .collect(Collectors.toList());
+    }
+
     private AccountPresenter buildAccountPresenter(Account account) {
         PersonPresenter personPresenter = modelMapper.map(account.getClient().getPerson(), PersonPresenter.class);
         ClientPresenter clientPresenter = modelMapper.map(account.getClient(), ClientPresenter.class);
@@ -104,6 +115,5 @@ public class AccountServiceImpl implements AccountService {
         accountPresenter.setPersonPresenter(personPresenter);
         return accountPresenter;
     }
-
 
 }
